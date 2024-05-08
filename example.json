@@ -1,0 +1,9 @@
+{
+    "name": "Platzi",
+    "description": "Online Courses",
+    "courses":{
+        "Advanced": ["PHP","VUEjs"],
+        "Basic": ["JSON","HTML"]
+    },
+    "example":"Valor de Cadena"
+}

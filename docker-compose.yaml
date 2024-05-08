@@ -1,23 +1,37 @@
-version: '3'
-services:
-  website:
-      image: nginx
-      ports: 
-        - "8081:80"
-      restart: always
-  website2:
-      image: nginx
-      ports: 
-        - "8082:80"
-      restart: always
-      networks:
-        platzi_composer:
-          ipv4_address: 192.168.92.5
+version: '3.8'
 
-networks:
-  platzi_composer:
-      ipam:
-        driver: default
-        config: 
-          - subnet: 192.168.92.0/24
-          - ip_range: 192.168.92.7
+services:
+  app:
+    image: php:8.1-fpm
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+    command: php -S 0.0.0.0:9000
+    environment:
+      APP_ENV: development
+    depends_on:
+      - db
+
+  composer:
+    image: composer:latest
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: composer install
+    depends_on:
+      - app
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: projectdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "8801:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
